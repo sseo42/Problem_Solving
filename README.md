@@ -5,7 +5,7 @@ personal repository to memorize how i solved the problems
 
 ## Rules
 ### File_name
->  **year** / **month** / **day** / **website** / **problem number**
+> **year** / **month** / **day** / **website** / **problem number**
   
 ### Contents
 >  1. summarize the problem
