@@ -12,7 +12,6 @@ personal repository to memorize how i solved the problems
   
 ### Contents
 >  1. summarize the problem
->  2. rewrite the problem
->  3. write down all the ideas
->  4. code!
->  5. comment about it
+>  2. write down all the ideas
+>  3. code!
+>  4. comment about it
