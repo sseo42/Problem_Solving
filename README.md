@@ -1,17 +1,26 @@
-Problem_Solving
-=========================
-personal repository to memorize how i solved the problems
-*****************************
+# Problem_Solving
+> Repository to memorize how i solved the problems
 
-## Rules
+## File_name
+- **YYYY_MM_DD_WEBSITE_PROBLEM-NUMBER**
 
+## Contents
 
-
-### File_name
-> **year** / **month** / **day** / **website** / **problem number**
-  
-### Contents
->  1. summarize the problem
->  2. write down all the ideas
->  3. code!
->  4. comment about it
+```C++
+    /**
+     * Problem
+     *    Summarize problem here
+     * 
+     * Ideas
+     *    Write down the ideas, what have to be cared, what structure & variables you will use
+     * 
+     * Comments
+     *    After solving the prolem, leave your comments here
+     */
+     
+     int main(void)
+     {
+         printf("Hello World!\n");
+         return 0;
+     }
+```
