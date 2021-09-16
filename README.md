@@ -15,7 +15,7 @@
      *    Write down the ideas, what have to be cared, what structure & variables you will use
      * 
      * Comments
-     *    After solving the prolem, leave your comments here
+     *    After solving the prolem, leave comments here
      */
      
      int main(void)
