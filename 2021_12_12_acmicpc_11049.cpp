@@ -39,6 +39,9 @@ using namespace std;
  *      값은 INT_MAX보다 같거나 작으므로 dp테이블은 INT_MAX로 초기화 한다.
  * 
  *      구현 시작
+ * 
+ * Comments
+ *      부족한 근거로 그리디하게 접근하려 했다, 충분한 근거가 없다면 dp를 생각해보자
  */
 
 #define IMPOSSIBLE 2147483647
