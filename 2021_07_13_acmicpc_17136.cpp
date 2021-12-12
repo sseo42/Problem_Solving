@@ -15,88 +15,98 @@ using namespace std;
  *      만족하는 최소의 색종이 개 수를 출력하자. 불가능하다면 -1을 출력한다.
  * 
  * Ideas
- *      부루트 하게 최대 정사각형을 구한 다음 큰 재료부터 가능한 모든 위치를 탐색
- *      해가며 채운 뒤 다음 재료를 테스트하는 방삭은 어떤가?
+ *      큰 색종이부터 시작하여 부르트하게 탐색하자.
+ *      탐색 사이즈, 남은 갯수, 지금까지 사용한 색종이 갯수를 원소로 하는 check함수를 두고
+ *      최대 정사각형을 마크하는 배열을 함수의 지역변수로 가져간다.
  * 
- *      주어진 배열을 탐색하는 시간은 100이다.
+ *      큰 사이즈부터 순회하여 함수를 재귀적으로 돌리고 색종이가 들어갈 자리가 
+ *      확보된다면 입력 배열의 값을 0으로 둔다. 그 후 남은 갯수가 있다면 같은 탐색 사이즈로 돌리고,
+ *      남은 갯수가 없다면 더 적은 사이즈를 원소로 돌린다.
+ *      재귀적 탐색이 종료 된다면 해당 값을 1로 돌리고
+ *      다른 들어갈 자리가 있는지 탐색하여 반복한다.
  * 
- *      따라서 각 재료당 100 즉 100 ^ 5 시간이 넘친다.
+ *      사이즈가 2인 경우 탐색의 마지막에 1의 갯수가 5개 이하인지 체크하여 정답을 갱신한다.
  * 
- *      아니다 (5 x 5 경우의 수) (4 x 4 경우의 수) (3 x 3 경우의 수) ... X 100
- *      + (5 x 5 경우) ... (2 x 2 경우) X 100
- *      + ...
- *      + (5 x 5 경우) X 100
+ *      정답의 초기값은 IMPOSSIBLE로 하여 최소 갱신을 한다.
  * 
- *      아니다 만약 (5 x 5) 색종이가 하나라도 들어간다면 (4 x 4) 색종이가 들어갈 공간은
- *      더욱 줄어들어 (4 x 4 경우의 수는 5 x 5 색종이가 하나도 안들어갈 때 보다 더 작아질 것이다)
- *      같은 이유로 (5 x 5 경우의 수)는 항상 (4 x 4 경우의 수) 보다 작다.
+ *      구현 시작
  * 
- *      따라서 (5 x 5) ~ (3 x 3) 이 한번도 안 들어갈 때가 가장 많은 경우의 수가 생기는 데 
- *      이 를 25C5 + 25C4 + ... + 25C1 이라 어림 잡을 수 있다(2 x 2 의 최대 경우의 수).
+ * Comments
  * 
- *      마찬가지로 (3 x 3 의 최대 경우의 수)는 9C5 + ... + 9C1
- * 
- *      따라서 곱으로 어림 잡아도 1 초 안에 처리가 가능하다. 실제로는 상위 색종이에서 선택을 하면 할 수록
- *      하위 경우의 수가 급격하게 줄어드므로 더 작을 것이다.
- * 
- *      필요한 자료구조는 다음과 같을 것이다.
- * 
- *      원본을 저장할 2차원 전역변수 arr
- *      백트레킹할 2차원 전역변수 visted
- *      visited 체크를 위해 쓰일 2차원 지역변수 possible_sq
- *      
- *      솔루션 함수와 파라미터를 색종이 크기, 남은 갯 수로 하는 재귀 함수로 나누자.
- * 
- *      구현 시작.
- * 
+ *      각 각의 색종이마다 전체 배열을 탐색하게 되면 시간이 초과된다.
+ *      모든 1을 덮기 위해서는 각 배열 원소에 1~5중 하나가 덮어야한다.
+ *      따라서 1번 전체배열을 백트래킹으로 순회하며 1~5 각 각의 케이스를 부루트하게 실험해보면된다.
  */
 
-# define ARR_SIZE 10
 # define IMPOSSIBLE 987654321
 
-int arr[ARR_SIZE + 1][ARR_SIZE + 1];
-bool visited[ARR_SIZE + 1][ARR_SIZE + 1];
+int square[] = {5, 5, 5, 5, 5};
+int arr[10][10];
+int answer = IMPOSSIBLE;
 
-int fill_sq(int sq_size, int cnt)
+bool is_possible_square(int r, int c, int size)
 {
-    int out = IMPOSSIBLE;
-    int possible_sq[ARR_SIZE + 1][ARR_SIZE + 1];
-    int left_up, left, up;
-
-    for (int i = 1; i <= ARR_SIZE; ++i)
+    if (r + size > 10 || c + size > 10)
+        return false;
+    for (int i = 0; i < size; ++i)
     {
-        for (int j = 1; j <= ARR_SIZE; ++j)
+        for (int j = 0; j < size; ++j)
         {
-            if (arr[i][j] && visited[i][j] == false)
-            {
-                left_up = arr[i - 1][j - 1];
-                left = arr[i][j - 1];
-                up = arr[i - 1][j];
+            if (arr[r + i][c + j] == 0)
+                return false;
+        }
+    }
+    return true;
+}
 
-                if (left_up == left && left_up == up)
-                    arr[i][j] = left_up + 1;
-                else
-                    arr[i][j] = max(left_up, max(left, up));
+void change_arr_elem(int r, int c, int size, int state)
+{
+    for (int i = 0; i < size; ++i)
+    {
+        for (int j = 0; j < size; ++j)
+        {
+            arr[r + i][c + j] = state;
+        }
+    }
+}
+
+void update_answer(int r, int c, int cnt)
+{
+    if (r >= 10)
+        answer = min(answer, cnt);
+    else if (c >= 10)
+        update_answer(r + 1, 0, cnt);
+    else if (arr[r][c] == 1)
+    {
+        for (int size = 1; size <= 5; ++size)
+        {
+            if (square[size - 1] > 0 && is_possible_square(r, c, size))
+            {
+                change_arr_elem(r, c, size, 0);
+                square[size - 1]--;
+                update_answer(r, c + 1, cnt + 1);
+                change_arr_elem(r, c, size, 1);
+                square[size - 1]++;
             }
         }
     }
-    
-}
-
-int solution()
-{
-
+    else
+        update_answer(r, c + 1, cnt);
 }
 
 int main(void)
 {
-    for (int i = 1; i <= ARR_SIZE; ++i)
+    for (int i = 0; i < 10; ++i)
     {
-        for (int j = 1; j <= ARR_SIZE; ++j)
+        for (int j = 0; j < 10; ++j)
         {
-            scanf("%d", &(arr[i][j]));
+            scanf("%d", arr[i] + j);
         }
     }
-    printf("%d\n", solution());
+    update_answer(0, 0, 0);
+    if (answer == IMPOSSIBLE)
+        printf("-1\n");
+    else
+        printf("%d\n", answer);
     return 0;
 }
