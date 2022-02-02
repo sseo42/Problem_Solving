@@ -26,6 +26,15 @@ using namespace std;
  * 
  *      start와 end를 움직일 함수, 2번 함수(조건절로 나눔), end 체크 함수, 3번 함수
  * 
+ * Comments
+ *      시간은 다소 오래 걸렸지만 나쁘지 않았다.
+ *      class 내부에서 함수를 최대한 명확하게 쪼개기 위해 고민을 하여 시간은 많이 썼다.
+ * 
+ *      start 지점이 앞선다 해도 로봇의 이동은 두 지점 사이에서 일어나도록 적성했다는 점을
+ *      일찍 깨닳았다면 시간이 좀 더 적게 소모됬을 것이다.
+ * 
+ *      zero를 count 하는 함수의 이름 뺴고는 만족한다. checkZero 대신 checkAndCount 라고 좀 더 획실히
+ *      했으면 어떗을까.
  */
 
 class ConveyBelt
